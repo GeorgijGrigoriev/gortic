@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"./server"
+	"github.com/georgijgrigoriev/gortic/server"
 )
 
 func processFlags() *server.Config {
