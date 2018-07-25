@@ -1,0 +1,11 @@
+*{outline:none !important}
+body{
+    background-image: url("/assets/img/404bkgnd.png");
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+
+#main-container{
+    margin-top: 20%;
+    background-color: rgba(255,255,255,.85);
+}
