@@ -12,19 +12,10 @@ const MyNews = [
 ];
 
 
-class News extends React.Component {
+class Article extends React.Component {
   render() {
       const { data } = this.props
-      let newsTemplate
-      if (data.length > 0){
-          newsTemplate = data.map(function(item){
-            return (
-              <div key={item.id}>
-                  <p className="news__author">{item.author}:</p>
-                  <p className="news__text">{item.text}</p>
-              </div> 
-          )
-          })
+      
       } else {
           newsTemplate = <p>К сожалению, новостей нет. </p>
       }
