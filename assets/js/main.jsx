@@ -27,6 +27,7 @@ class Article extends React.Component {
               }
           </div>
       )
+            
 }
 }
 

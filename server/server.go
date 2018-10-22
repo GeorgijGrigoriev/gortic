@@ -43,8 +43,25 @@ func Run(cfg *Config) {
 
 //indexHandler - handler of index page
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.RemoteAddr)
+	//Logging remote address
+	RequestLogging(r)
 	RenderTemplate(w, "index.html")
+}
+
+//RequestLogging - logs requests
+func RequestLogging(r *http.Request) {
+	if _, err := os.Stat("logs"); os.IsNotExist(err) {
+		os.Mkdir("logs", 0777)
+	}
+	err := os.Chdir("logs")
+	Check(err)
+	name := "req.log"
+	wl, err := os.OpenFile(name, os.O_RDONLY|os.O_CREATE, 0666)
+	Check(err)
+	_, err = wl.WriteString(r.RemoteAddr + "\n")
+	err = wl.Sync()
+	Check(err)
+
 }
 
 //NotFound404 - 404 error handler
@@ -69,7 +86,7 @@ func WaitForSignalTerm() {
 
 }
 
-//Health - check server health
+//Health - Check server health
 func Health() {
 }
 
@@ -78,4 +95,19 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 	templateDir := filepath.Join("templates", tmpl)
 	t := template.Must(template.ParseFiles(templateDir))
 	t.ExecuteTemplate(w, tmpl, nil)
+}
+
+//Check - error handler
+func Check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+//CreateFolderIfNotExist - creating folder if not exists
+func CreateFolderIfNotExist(dir string) {
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		err := os.Mkdir(dir, 0777)
+		Check(err)
+	}
 }
