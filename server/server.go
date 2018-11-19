@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -29,6 +30,7 @@ func Run(cfg *Config) {
 	assets := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/")))
 	router.NotFoundHandler = NotFound404
 	router.PathPrefix("/assets/").Handler(assets)
+	router.HandleFunc("/tickets", showTickets)
 	router.HandleFunc("/", indexHandler)
 
 	srv := &http.Server{
@@ -69,6 +71,10 @@ var NotFound404 = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) 
 	RenderTemplate(w, "404.html")
 })
 
+func showTickets(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Test handler")
+}
+
 //WaitForSignalTerm - counter + exit program
 func WaitForSignalTerm() {
 	ch := make(chan os.Signal)
@@ -100,7 +106,7 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 //Check - error handler
 func Check(e error) {
 	if e != nil {
-		panic(e)
+		log.Println(e)
 	}
 }
 

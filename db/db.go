@@ -15,6 +15,6 @@ func Open(cfg *server.Config) (*sql.DB, error) {
 	if err != nil {
 		log.Println(err)
 	}
-
+	defer db.Close()
 	return db, nil
 }
