@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -28,9 +27,10 @@ func Run(cfg *Config) {
 
 	router := mux.NewRouter()
 	assets := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/")))
-	router.NotFoundHandler = NotFound404
+	//router.NotFoundHandler = NotFound404
 	router.PathPrefix("/assets/").Handler(assets)
-	router.HandleFunc("/tickets", showTickets)
+	router.HandleFunc("/tickets/", showTickets)
+	router.HandleFunc("/archive/", showArchive)
 	router.HandleFunc("/", indexHandler)
 
 	srv := &http.Server{
@@ -72,7 +72,11 @@ var NotFound404 = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) 
 })
 
 func showTickets(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Test handler")
+
+}
+
+func showArchive(w http.ResponseWriter, r *http.Request) {
+	RenderTemplate(w, "archive.html")
 }
 
 //WaitForSignalTerm - counter + exit program
