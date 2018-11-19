@@ -23,6 +23,11 @@ type Config struct {
 
 //Run - main server instance
 func Run(cfg *Config) {
+	message := `Hello, this is Go Ticket's System Version 3 \n
+	Unstable version \n
+	Refer to github.com/georgijgrigoriev/gortic/ for any help \n
+	Enjoy :)`
+	log.Println(message)
 	log.Printf("Starting server on %s\n", cfg.ListenSpec)
 
 	router := mux.NewRouter()
