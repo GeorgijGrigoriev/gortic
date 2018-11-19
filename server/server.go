@@ -23,16 +23,16 @@ type Config struct {
 
 //Run - main server instance
 func Run(cfg *Config) {
-	message := `Hello, this is Go Ticket's System Version 3 \n
-	Unstable version \n
-	Refer to github.com/georgijgrigoriev/gortic/ for any help \n
-	Enjoy :)`
+	message := `Hello, this is Go Ticket's System Version 3
+				Unstable version 
+				Refer to github.com/georgijgrigoriev/gortic/ for any help
+				Enjoy :)`
 	log.Println(message)
 	log.Printf("Starting server on %s\n", cfg.ListenSpec)
 
 	router := mux.NewRouter()
 	assets := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/")))
-	//router.NotFoundHandler = NotFound404
+	router.NotFoundHandler = NotFound404
 	router.PathPrefix("/assets/").Handler(assets)
 	router.HandleFunc("/tickets/", showTickets)
 	router.HandleFunc("/archive/", showArchive)
