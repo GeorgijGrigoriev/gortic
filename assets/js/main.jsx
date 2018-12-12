@@ -18,8 +18,8 @@ class Article extends React.Component {
     render() {
       const { author, text } = this.props.data
       return (
-        <div className="row">
-            <div className="col col-md-6 offset-md-3">
+        <div className="row ticket__row">
+            <div className="col col-md-6">
                 <div className="article card">
                     <div className="card-body">
                         <p className="news__author card-title">{author}:</p>
@@ -27,6 +27,24 @@ class Article extends React.Component {
                     </div>
                 </div>
             </div>
+        </div>
+      )
+    }
+  }
+
+<Perfomance />
+
+  class Perfomance extends React.Component {
+    render() {
+      const { currentTasks, totalTask} = { currentTasks: 2, totalTask: 10}
+      return (
+        <div className="row perfomance__row">
+          <div className="col col-md-6 offset-md-6">
+            <div className="dataChart">
+              <p className="perfomance__currentTasks">{currentTasks}</p>
+              <p className="perfomance__totalTask">{totalTask}</p>
+            </div>
+          </div>
         </div>
       )
     }
@@ -48,8 +66,9 @@ class News extends React.Component {
         <div className="news">
           {newsTemplate}
           {
-            data.length ? <div className="col col-md-6 offset-md-3"> <strong className={'news__count'}>Всего новостей: {data.length}</strong></div> : null
+            data.length ? <div className="col col-md-6 offset-md-2"> <strong className={'news__count'}>Всего новостей: {data.length}</strong></div> : null
           }
+          <Perfomance />
         </div>
       );
     }

@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/georgijgrigoriev/gortic/server"
+	"../server"
 	//Go Mysql driver
 	_ "github.com/go-sql-driver/mysql"
 )

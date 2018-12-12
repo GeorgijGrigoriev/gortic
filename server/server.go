@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/georgijgrigoriev/gortic/models"
 	"github.com/gorilla/mux"
 )
 
@@ -28,6 +29,7 @@ func Run(cfg *Config) {
 		Refer to github.com/georgijgrigoriev/gortic/ for any help
 		Enjoy :)`
 	log.Println(message)
+	CreateFolderIfNotExist("logs")
 	log.Printf("Starting server on %s\n", cfg.ListenSpec)
 
 	router := mux.NewRouter()
@@ -51,24 +53,20 @@ func Run(cfg *Config) {
 //indexHandler - handler of index page
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	//Logging remote address
-	RequestLogging(r)
 	RenderTemplate(w, "index.html")
 }
 
 //RequestLogging - logs requests
 func RequestLogging(r *http.Request) {
-	if _, err := os.Stat("logs"); os.IsNotExist(err) {
-		os.Mkdir("logs", 0777)
-	}
 	err := os.Chdir("logs")
 	Check(err)
 	name := "req.log"
-	wl, err := os.OpenFile(name, os.O_RDONLY|os.O_CREATE, 0666)
+	wl, err := os.OpenFile(name, os.O_APPEND|os.O_WRONLY, 0600)
 	Check(err)
-	_, err = wl.WriteString(r.RemoteAddr + "\n")
+	_, err = wl.WriteString(time.Now().String() + " : " + r.RemoteAddr + " : " + r.RequestURI + "\n")
 	err = wl.Sync()
 	Check(err)
-
+	defer wl.Close()
 }
 
 //NotFound404 - 404 error handler
@@ -76,13 +74,14 @@ var NotFound404 = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) 
 	RenderTemplate(w, "404.html")
 })
 
-func showTickets(w http.ResponseWriter, r *http.Request) {
+var showTickets = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	data := models.GetTickets()
 
-}
+})
 
-func showArchive(w http.ResponseWriter, r *http.Request) {
+var showArchive = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	RenderTemplate(w, "archive.html")
-}
+})
 
 //WaitForSignalTerm - counter + exit program
 func WaitForSignalTerm() {
@@ -103,6 +102,7 @@ func WaitForSignalTerm() {
 
 //Health - Check server health
 func Health() {
+	log.Println("In dev")
 }
 
 //RenderTemplate - render template function

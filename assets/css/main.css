@@ -7,3 +7,11 @@
 .none {
     display: none;
 }
+
+.ticket__row{
+    margin-top: 10px;
+}
+
+.inline-block{
+    display: inline-block;
+}
