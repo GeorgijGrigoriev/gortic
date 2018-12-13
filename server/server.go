@@ -1,6 +1,8 @@
 package server
 
 import (
+	"database/sql"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -10,20 +12,16 @@ import (
 	"syscall"
 	"time"
 
+	"../config"
 	"github.com/georgijgrigoriev/gortic/models"
 	"github.com/gorilla/mux"
+
+	//Go Mysql driver
+	_ "github.com/go-sql-driver/mysql"
 )
 
-//Config - main config struct
-type Config struct {
-	ListenSpec string
-	DBConn     string
-	DBType     string
-	Assets     string
-}
-
 //Run - main server instance
-func Run(cfg *Config) {
+func Run(cfg *config.Config) {
 	message := `Hello, this is Go Ticket's System Version 3
 		Unstable version 
 		Refer to github.com/georgijgrigoriev/gortic/ for any help
@@ -76,7 +74,7 @@ var NotFound404 = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) 
 
 var showTickets = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	data := models.GetTickets()
-
+	fmt.Fprint(w, data.Sta)
 })
 
 var showArchive = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -125,4 +123,18 @@ func CreateFolderIfNotExist(dir string) {
 		err := os.Mkdir(dir, 0777)
 		Check(err)
 	}
+}
+
+//Open - sql open connection
+func Open(cfg *config.Config) (*sql.DB, error) {
+	db, err := sql.Open(cfg.DBType, cfg.DBConn)
+	if err != nil {
+		log.Println(err)
+	}
+	defer db.Close()
+	return db, nil
+}
+
+func getTickets(db *Open) {
+
 }
